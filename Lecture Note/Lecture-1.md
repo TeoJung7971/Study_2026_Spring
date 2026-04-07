@@ -22,13 +22,13 @@
 - CV everywhere
   - Not only camera(apparatus) and also Visual Intelligence
 
-### History of CV & DL
+### History of CV
 - 1950s 
   - Hubel and Wiesel, 1959
     - Critically Important Experiment in Neuroscience
     - Study about  Mammal's Visual Pathway
     - Neurons feed each other, create big network of computation  
-        \: Profound Impact on the NN modeling of visual algorithm
+      -> Profound Impact on the NN modeling of visual algorithm
 - 1960s 
   - Larry Roberts, 1963
     - How to understand the surfaces, corners and features of object like humans normally do
@@ -49,7 +49,7 @@
   - Recognition vis Edge Detection
     - Digital photos were appeared!
     - John Canny, 1986
-    - David Lowe. 1987
+    - David Lowe, 1987
 - AI Winter Starts
   - Expert systems failed
   - But, some research (subfields) started to grow
@@ -60,7 +60,7 @@
     -> Remarkable Visual System  
     -> Need to study not only (simple) character shapes and sketches but also **Object(Visual) Recognition**
 - 1990s
-  - Still in AI Winter, But...
+  - Still in AI Winter, But...  
   - Recognition via Grouping
     - Shi and Malik, 1997: Normalized Cuts
 - 2000s 
@@ -70,4 +70,52 @@
     - Viola and Jones, 2001
     - Taken into the industry (like Auto Focus in Digital Camera)
 
-## Course Overview
+### History of DL
+- 1950s
+  - Perceptron
+- 1960s
+  - Minsky and Papert, 1969
+  - Limitation of (One-Layer) Perceptron: Cannot learn the XOR function
+- 1980s
+  - Fukushima, 1980: Neocognitron
+    - Inspired by the Hierarchial Visual Pathway Model
+      - From Simple Receptive Field to the More Complex Receptive Field
+    - Early layers: simple functions, Late layers: complex functions
+      - Simple function: Convolution
+      - Complex function: Pooling (get information from convolution layers)
+    - Hand-worked
+  - **Rumelhart, Hinton and Williams, 1986: Backprop**
+    ![1775563256089](image/Lecture-1/1775563256089.png)
+    - Introduce Error Correcting (as Learning) Objective Function
+      - Answers from the Neural Network vs Actual Answers -> Differences
+      - Back-propagate the Information(Differences) and Improve the Parameters along the Neural Network
+      - Follow the Basic Calculus Chain-Rule(미적분의 연쇄법칙)
+- 1990s
+  - LeCun et al, 1998: Convolutional Network(LeNet)
+    - Still in AI winter, but there were some milestone researches (like this one)
+    - Backprop Algorithm + Neocognitron Architecture
+    - It was used to recognize digits for US Post
+- 2000s
+  - Deep Learning!
+  - Work on the Digits and Letters, But didn't work well on the digital photos that the neuroscientists were using
+    - Lack of Data is Huge part of the problem
+    - Specifically, mathematical problem; The algorithm(NN) is high capacity algorithm that needs lots of data
+  - ImageNet: Large Scale Visual Recognition Challenge
+    - At that time, the importance of data was underappreciated
+    - But the Key is (Big) Data - 15 million images within 22000 categories
+    - In the Challenge, use a million images and 1000 categories
+- 2010s
+  - AlexNet, 2012
+    - Best-performing model in the 2012 ImageNet Challenge
+    - Use a Convolutional Neural Network(CNN)
+    - Shared a similar architecture with Neocognitron, but featured two key breakthroughs:
+      - Backpropagation (A mathematical learning rule)
+      - Availability of Big Data (Large-scale datasets for training)
+- to Present...
+  - Various Visual Recognition Tasks
+    - Image Classification
+    - Image Retrieval
+    - Object Detection
+    - Image Segmentation
+    - etc...
+
