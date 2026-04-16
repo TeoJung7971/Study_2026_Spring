@@ -1,0 +1,30 @@
+# ── Claude Code local sessions ────────────────────────────
+.claude/
+
+# ── Model weights ─────────────────────────────────────────
+*.pth
+
+# ── Python ────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.Python
+
+# ── Virtual environments ──────────────────────────────────
+.venv/
+venv/
+ENV/
+env/
+
+# ── IDE ───────────────────────────────────────────────────
+.idea/
+*.swp
+*.swo
+
+# ── OS ────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
