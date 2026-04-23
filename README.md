@@ -10,7 +10,18 @@ Repository for Studying CS231n(Stanford, 2025) and Practicing Deep Learning Task
 ## Schedule
 
 - April 2026 Week 1:
-    - Lecture 1 ~ Lecture 7
-    - PyTorch Basic (w/ MNIST & CIFAR-10 Dataset, Torchvision Library)
+    - CS231n Lecture 1~5
+    - PyTorch Basic Practice(w/ MNIST & CIFAR-10 Dataset, Torchvision Library)
+        - Over 80% Accuracy with ResNet18 
 - April 2026 Week 2:
-    - Later
+    - CS231n Lecture 6, 9, 12
+    - CS224n Lecture 1~5
+    - PyTorch Basic Practice(w/ CIFAR-10 Dataset, Torchvision Library)
+        - Over 85% Accuracy with ResNet18
+        - Augmentation, Gradient-Clipping, Scheduler
+        - Ablation Study => Over 90% Accuracy
+- April 2026 Week 3:
+    - CS224n Lecture 6~11
+    - Pytorch Practice(w/ IMDB Dataset)
+        - Sentiment Classification Task
+        - Over 80% Accuracy with LSTM, Transformer, BERT
