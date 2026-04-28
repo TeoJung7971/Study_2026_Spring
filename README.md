@@ -25,3 +25,12 @@ Repository for Studying CS231n(Stanford, 2025) and Practicing Deep Learning Task
     - Pytorch Practice(w/ IMDB Dataset)
         - Sentiment Classification Task
         - Over 80% Accuracy with LSTM, Transformer, BERT
+- April 2026 Week 4:
+    - CS224n Lecture 10~12
+    - Pytorch Practice
+        - Transformer Paper Review(Attention is All You Need)
+        - Transformer Implementation w/ PyTorch
+        - Transformer Code Review
+        - Reference: 
+          - https://nlp.seas.harvard.edu/annotated-transformer/
+          - https://huggingface.co/datasets/bird-of-paradise/transformer-from-scratch-tutorial/blob/main/Transformer_Implementation_Tutorial.ipynb 
