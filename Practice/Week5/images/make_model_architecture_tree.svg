@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <style>
+      .bg { fill: #fbfaf6; }
+      .title { font: 700 32px "Segoe UI", Arial, sans-serif; fill: #172326; }
+      .subtitle { font: 400 16px "Segoe UI", Arial, sans-serif; fill: #556366; }
+      .lane { fill: #f0eee7; stroke: #ded8c8; stroke-width: 1; rx: 10; }
+      .laneText { font: 700 13px "Segoe UI", Arial, sans-serif; fill: #687275; letter-spacing: 1px; }
+      .node { fill: #ffffff; stroke: #30464b; stroke-width: 2; rx: 8; }
+      .factory { fill: #153f46; stroke: #153f46; }
+      .model { fill: #e1f0ed; stroke: #22706f; }
+      .module { fill: #eef5ff; stroke: #376996; }
+      .layer { fill: #fff5d6; stroke: #9a6b00; }
+      .helper { fill: #f1e7fb; stroke: #70509b; }
+      .textDark { font: 700 18px "Consolas", "Segoe UI", monospace; fill: #172326; }
+      .textLight { font: 700 20px "Consolas", "Segoe UI", monospace; fill: #ffffff; }
+      .small { font: 400 13px "Segoe UI", Arial, sans-serif; fill: #4e5d60; }
+      .smallLight { font: 400 13px "Segoe UI", Arial, sans-serif; fill: #eaf3f4; }
+      .edge { fill: none; stroke: #53666a; stroke-width: 2.2; }
+      .edgeSoft { fill: none; stroke: #89979a; stroke-width: 1.8; }
+      .edgeCall { fill: none; stroke: #8d6b2a; stroke-width: 2; stroke-dasharray: 7 6; }
+      .note { font: 400 13px "Segoe UI", Arial, sans-serif; fill: #687275; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#53666a"/>
+    </marker>
+    <marker id="arrowSoft" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#89979a"/>
+    </marker>
+    <marker id="arrowCall" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#8d6b2a"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1400" height="900"/>
+  <text class="title" x="700" y="48" text-anchor="middle">make_model() Direct Architecture Tree</text>
+  <text class="subtitle" x="700" y="76" text-anchor="middle">Only classes/functions on the construction path are shown. Repeated blocks are compressed.</text>
+
+  <rect class="lane" x="50" y="115" width="225" height="670"/>
+  <rect class="lane" x="305" y="115" width="225" height="670"/>
+  <rect class="lane" x="560" y="115" width="290" height="670"/>
+  <rect class="lane" x="880" y="115" width="245" height="670"/>
+  <rect class="lane" x="1155" y="115" width="195" height="670"/>
+
+  <text class="laneText" x="162" y="140" text-anchor="middle">FACTORY</text>
+  <text class="laneText" x="417" y="140" text-anchor="middle">RETURNED MODEL</text>
+  <text class="laneText" x="705" y="140" text-anchor="middle">TOP-LEVEL MODULES</text>
+  <text class="laneText" x="1002" y="140" text-anchor="middle">LAYER CONTENTS</text>
+  <text class="laneText" x="1252" y="140" text-anchor="middle">HELPERS / PRIMITIVES</text>
+
+  <rect class="node factory" x="72" y="210" width="180" height="86"/>
+  <text class="textLight" x="162" y="243" text-anchor="middle">make_model()</text>
+  <text class="smallLight" x="162" y="268" text-anchor="middle">factory function</text>
+
+  <rect class="node layer" x="72" y="375" width="180" height="90"/>
+  <text class="textDark" x="162" y="405" text-anchor="middle">templates</text>
+  <text class="small" x="162" y="429" text-anchor="middle">attn, ff, position</text>
+  <text class="small" x="162" y="449" text-anchor="middle">copied into layers</text>
+
+  <rect class="node model" x="327" y="210" width="180" height="86"/>
+  <text class="textDark" x="417" y="243" text-anchor="middle">EncoderDecoder</text>
+  <text class="small" x="417" y="268" text-anchor="middle">returned full model</text>
+
+  <rect class="node module" x="595" y="145" width="220" height="68"/>
+  <text class="textDark" x="705" y="172" text-anchor="middle">Encoder</text>
+  <text class="small" x="705" y="194" text-anchor="middle">N x EncoderLayer</text>
+
+  <rect class="node module" x="595" y="245" width="220" height="68"/>
+  <text class="textDark" x="705" y="272" text-anchor="middle">Decoder</text>
+  <text class="small" x="705" y="294" text-anchor="middle">N x DecoderLayer</text>
+
+  <rect class="node module" x="595" y="345" width="220" height="68"/>
+  <text class="textDark" x="705" y="372" text-anchor="middle">src_embed</text>
+  <text class="small" x="705" y="394" text-anchor="middle">Embedding path</text>
+
+  <rect class="node module" x="595" y="445" width="220" height="68"/>
+  <text class="textDark" x="705" y="472" text-anchor="middle">tgt_embed</text>
+  <text class="small" x="705" y="494" text-anchor="middle">Embedding path</text>
+
+  <rect class="node module" x="595" y="545" width="220" height="68"/>
+  <text class="textDark" x="705" y="572" text-anchor="middle">Generator</text>
+  <text class="small" x="705" y="594" text-anchor="middle">vocab logits</text>
+
+  <rect class="node layer" x="905" y="145" width="195" height="92"/>
+  <text class="textDark" x="1002" y="174" text-anchor="middle">EncoderLayer</text>
+  <text class="small" x="1002" y="198" text-anchor="middle">self-attention</text>
+  <text class="small" x="1002" y="218" text-anchor="middle">feed-forward</text>
+
+  <rect class="node layer" x="905" y="255" width="195" height="104"/>
+  <text class="textDark" x="1002" y="284" text-anchor="middle">DecoderLayer</text>
+  <text class="small" x="1002" y="308" text-anchor="middle">masked self-attn</text>
+  <text class="small" x="1002" y="328" text-anchor="middle">src-attn</text>
+  <text class="small" x="1002" y="348" text-anchor="middle">feed-forward</text>
+
+  <rect class="node layer" x="905" y="405" width="195" height="74"/>
+  <text class="textDark" x="1002" y="435" text-anchor="middle">Embeddings</text>
+  <text class="small" x="1002" y="458" text-anchor="middle">token lookup</text>
+
+  <rect class="node layer" x="905" y="515" width="195" height="74"/>
+  <text class="textDark" x="1002" y="545" text-anchor="middle">PositionalEncoding</text>
+  <text class="small" x="1002" y="568" text-anchor="middle">position signal</text>
+
+  <rect class="node helper" x="1175" y="145" width="155" height="74"/>
+  <text class="textDark" x="1252" y="175" text-anchor="middle">clones()</text>
+  <text class="small" x="1252" y="198" text-anchor="middle">repeat/copy</text>
+
+  <rect class="node helper" x="1175" y="250" width="155" height="86"/>
+  <text class="textDark" x="1252" y="280" text-anchor="middle">MultiHeaded</text>
+  <text class="textDark" x="1252" y="302" text-anchor="middle">Attention</text>
+  <text class="small" x="1252" y="323" text-anchor="middle">Q/K/V heads</text>
+
+  <rect class="node helper" x="1175" y="365" width="155" height="74"/>
+  <text class="textDark" x="1252" y="395" text-anchor="middle">attention()</text>
+  <text class="small" x="1252" y="418" text-anchor="middle">scaled dot-product</text>
+
+  <rect class="node helper" x="1175" y="475" width="155" height="82"/>
+  <text class="textDark" x="1252" y="505" text-anchor="middle">Positionwise</text>
+  <text class="textDark" x="1252" y="527" text-anchor="middle">FeedForward</text>
+
+  <rect class="node helper" x="1175" y="595" width="155" height="82"/>
+  <text class="textDark" x="1252" y="625" text-anchor="middle">Sublayer</text>
+  <text class="textDark" x="1252" y="647" text-anchor="middle">Connection</text>
+
+  <rect class="node helper" x="1175" y="715" width="155" height="54"/>
+  <text class="textDark" x="1252" y="749" text-anchor="middle">LayerNorm</text>
+
+  <path class="edge" marker-end="url(#arrow)" d="M252 253 H327"/>
+  <path class="edge" marker-end="url(#arrow)" d="M507 253 C545 253 545 179 595 179"/>
+  <path class="edge" marker-end="url(#arrow)" d="M507 253 C545 253 545 279 595 279"/>
+  <path class="edge" marker-end="url(#arrow)" d="M507 253 C545 253 545 379 595 379"/>
+  <path class="edge" marker-end="url(#arrow)" d="M507 253 C545 253 545 479 595 479"/>
+  <path class="edge" marker-end="url(#arrow)" d="M507 253 C545 253 545 579 595 579"/>
+
+  <path class="edgeSoft" marker-end="url(#arrowSoft)" d="M162 296 V375"/>
+  <path class="edgeSoft" marker-end="url(#arrowSoft)" d="M252 420 C390 420 455 179 595 179"/>
+  <path class="edgeSoft" marker-end="url(#arrowSoft)" d="M252 420 C390 420 455 279 595 279"/>
+  <path class="edgeSoft" marker-end="url(#arrowSoft)" d="M252 420 C405 420 460 379 595 379"/>
+  <path class="edgeSoft" marker-end="url(#arrowSoft)" d="M252 420 C405 420 460 479 595 479"/>
+
+  <path class="edge" marker-end="url(#arrow)" d="M815 179 H905"/>
+  <path class="edge" marker-end="url(#arrow)" d="M815 279 H905"/>
+  <path class="edge" marker-end="url(#arrow)" d="M815 379 C860 379 860 442 905 442"/>
+  <path class="edge" marker-end="url(#arrow)" d="M815 379 C860 379 860 552 905 552"/>
+  <path class="edge" marker-end="url(#arrow)" d="M815 479 C860 479 860 442 905 442"/>
+  <path class="edge" marker-end="url(#arrow)" d="M815 479 C860 479 860 552 905 552"/>
+
+  <path class="edgeCall" marker-end="url(#arrowCall)" d="M1100 191 C1135 191 1135 182 1175 182"/>
+  <path class="edgeCall" marker-end="url(#arrowCall)" d="M1100 307 C1135 307 1135 182 1175 182"/>
+  <path class="edgeCall" marker-end="url(#arrowCall)" d="M1100 191 C1135 191 1135 293 1175 293"/>
+  <path class="edgeCall" marker-end="url(#arrowCall)" d="M1100 307 C1135 307 1135 293 1175 293"/>
+  <path class="edgeCall" marker-end="url(#arrowCall)" d="M1252 336 V365"/>
+  <path class="edgeCall" marker-end="url(#arrowCall)" d="M1100 191 C1135 191 1135 516 1175 516"/>
+  <path class="edgeCall" marker-end="url(#arrowCall)" d="M1100 307 C1135 307 1135 516 1175 516"/>
+  <path class="edgeCall" marker-end="url(#arrowCall)" d="M1100 191 C1135 191 1135 636 1175 636"/>
+  <path class="edgeCall" marker-end="url(#arrowCall)" d="M1100 307 C1135 307 1135 636 1175 636"/>
+  <path class="edgeCall" marker-end="url(#arrowCall)" d="M1252 677 V715"/>
+  <path class="edgeCall" marker-end="url(#arrowCall)" d="M705 213 C705 790 1165 780 1175 742"/>
+  <path class="edgeCall" marker-end="url(#arrowCall)" d="M705 313 C705 790 1165 780 1175 742"/>
+
+  <text class="note" x="70" y="824">Solid arrows: constructor containment. Dashed arrows: helper calls used inside included modules.</text>
+  <text class="note" x="70" y="850">Excluded: subsequent_mask(), example_*(), inference_test(), run_tests(), training/data/visualization helpers.</text>
+</svg>

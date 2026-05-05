@@ -6,132 +6,6 @@ from model import PositionalEncoding, subsequent_mask
 from test import run_model_example
 from train import LabelSmoothing
 
-
-def example_mask():
-    LS_data = pd.concat(
-        [
-            pd.DataFrame(
-                {
-                    "Subsequent Mask": subsequent_mask(20)[0][x, y].flatten(),
-                    "Window": y,
-                    "Masking": x,
-                }
-            )
-            for y in range(20)
-            for x in range(20)
-        ]
-    )
-
-    return (
-        alt.Chart(LS_data)
-        .mark_rect()
-        .properties(height=250, width=250)
-        .encode(
-            alt.X("Window:O"),
-            alt.Y("Masking:O"),
-            alt.Color("Subsequent Mask:Q", scale=alt.Scale(scheme="viridis")),
-        )
-        .interactive()
-    )
-
-
-def example_positional():
-    pe = PositionalEncoding(20, 0)
-    y = pe.forward(torch.zeros(1, 100, 20))
-
-    data = pd.concat(
-        [
-            pd.DataFrame(
-                {
-                    "embedding": y[0, :, dim],
-                    "dimension": dim,
-                    "position": list(range(100)),
-                }
-            )
-            for dim in [4, 5, 6, 7]
-        ]
-    )
-
-    return (
-        alt.Chart(data)
-        .mark_line()
-        .properties(width=800)
-        .encode(x="position", y="embedding", color="dimension:N")
-        .interactive()
-    )
-
-
-def example_learning_schedule():
-    from train import rate
-
-    opts = [
-        [512, 1, 4000],
-        [512, 1, 8000],
-        [256, 1, 4000],
-    ]
-
-    dummy_model = torch.nn.Linear(1, 1)
-    learning_rates = []
-
-    for idx, example in enumerate(opts):
-        optimizer = torch.optim.Adam(
-            dummy_model.parameters(), lr=1, betas=(0.9, 0.98), eps=1e-9
-        )
-        lr_scheduler = torch.optim.lr_scheduler.LambdaLR(
-            optimizer=optimizer,
-            lr_lambda=lambda step, example=example: rate(step, *example),
-        )
-        tmp = []
-        for step in range(20000):
-            tmp.append(optimizer.param_groups[0]["lr"])
-            optimizer.step()
-            lr_scheduler.step()
-        learning_rates.append(
-            pd.DataFrame(
-                {
-                    "learning_rate": tmp,
-                    "model_size:warmup": [f"{example[0]}:{example[2]}"]
-                    * 20000,
-                    "step": range(20000),
-                }
-            )
-        )
-
-    return (
-        alt.Chart(pd.concat(learning_rates))
-        .mark_line()
-        .properties(width=600)
-        .encode(x="step", y="learning_rate", color="model_size:warmup:N")
-        .interactive()
-    )
-
-
-def example_label_smoothing():
-    crit = LabelSmoothing(5, 0, 0.4)
-    predict = torch.FloatTensor(
-        [
-            [0, 0.2, 0.7, 0.1, 0],
-            [0, 0.2, 0.7, 0.1, 0],
-            [0, 0.2, 0.7, 0.1, 0],
-        ]
-    )
-    crit(predict.log(), torch.LongTensor([2, 1, 0]))
-
-    return (
-        alt.Chart(
-            pd.DataFrame(
-                {
-                    "target distribution": crit.true_dist[0, :],
-                    "columns": list(range(5)),
-                }
-            )
-        )
-        .mark_bar()
-        .properties(height=200)
-        .encode(x="columns", y="target distribution")
-    )
-
-
 def loss(x, crit):
     d = x + 3 * 1
     predict = torch.FloatTensor([[0, x / d, 1 / d, 1 / d, 1 / d]])
@@ -139,6 +13,11 @@ def loss(x, crit):
 
 
 def penalization_visualization():
+    """
+    추가: Annotated Transformer
+
+    Label smoothing이 confidence가 높은 예측에 주는 penalty 변화를 시각화한다.
+    """
     crit = LabelSmoothing(5, 0, 0.1)
     loss_data = pd.DataFrame(
         {
@@ -156,7 +35,17 @@ def penalization_visualization():
 
 
 def mtx2df(m, max_row, max_col, row_tokens, col_tokens):
-    "convert a dense matrix to a data frame with row and column indices"
+    """
+    추가: Annotated Transformer
+
+    Attention matrix를 Altair heatmap 입력용 DataFrame으로 변환한다.
+
+    - m: attention matrix
+    - max_row: 시각화할 최대 row 수
+    - max_col: 시각화할 최대 column 수
+    - row_tokens: row token labels
+    - col_tokens: column token labels
+    """
     return pd.DataFrame(
         [
             (
@@ -174,6 +63,18 @@ def mtx2df(m, max_row, max_col, row_tokens, col_tokens):
 
 
 def attn_map(attn, layer, head, row_tokens, col_tokens, max_dim=30):
+    """
+    추가: Annotated Transformer
+
+    단일 layer/head의 attention weight를 heatmap으로 시각화한다.
+
+    - attn: attention tensor
+    - layer: layer index
+    - head: attention head index
+    - row_tokens: query token labels
+    - col_tokens: key token labels
+    - max_dim: 시각화할 최대 token 수
+    """
     df = mtx2df(
         attn[0, head].data,
         max_dim,
@@ -208,6 +109,18 @@ def get_decoder_src(model, layer):
 
 
 def visualize_layer(model, layer, getter_fn, ntokens, row_tokens, col_tokens):
+    """
+    변형: Annotated Transformer
+
+    지정한 Transformer layer의 여러 head attention map을 묶어 표시한다.
+
+    - model: translation model
+    - layer: layer index
+    - getter_fn: attention tensor getter function
+    - ntokens: 시각화할 token 수
+    - row_tokens: query token labels
+    - col_tokens: key token labels
+    """
     attn = getter_fn(model, layer)
     n_heads = attn.shape[1]
     charts = [
@@ -228,6 +141,16 @@ def visualize_layer(model, layer, getter_fn, ntokens, row_tokens, col_tokens):
 
 
 def viz_encoder_self(vocab_src, vocab_tgt, spacy_de, spacy_en):
+    """
+    변형: Annotated Transformer
+
+    학습된 모델의 encoder self-attention을 예시 문장 기준으로 시각화한다.
+
+    - vocab_src: source vocabulary
+    - vocab_tgt: target vocabulary
+    - spacy_de: source tokenizer
+    - spacy_en: target tokenizer
+    """
     model, example_data = run_model_example(
         vocab_src, vocab_tgt, spacy_de, spacy_en, n_examples=1
     )
@@ -248,6 +171,16 @@ def viz_encoder_self(vocab_src, vocab_tgt, spacy_de, spacy_en):
 
 
 def viz_decoder_self(vocab_src, vocab_tgt, spacy_de, spacy_en):
+    """
+    변형: Annotated Transformer
+
+    학습된 모델의 decoder masked self-attention을 예시 문장 기준으로 시각화한다.
+
+    - vocab_src: source vocabulary
+    - vocab_tgt: target vocabulary
+    - spacy_de: source tokenizer
+    - spacy_en: target tokenizer
+    """
     model, example_data = run_model_example(
         vocab_src, vocab_tgt, spacy_de, spacy_en, n_examples=1
     )
@@ -268,6 +201,16 @@ def viz_decoder_self(vocab_src, vocab_tgt, spacy_de, spacy_en):
 
 
 def viz_decoder_src(vocab_src, vocab_tgt, spacy_de, spacy_en):
+    """
+    변형: Annotated Transformer
+
+    학습된 모델의 encoder-decoder attention을 예시 문장 기준으로 시각화한다.
+
+    - vocab_src: source vocabulary
+    - vocab_tgt: target vocabulary
+    - spacy_de: source tokenizer
+    - spacy_en: target tokenizer
+    """
     model, example_data = run_model_example(
         vocab_src, vocab_tgt, spacy_de, spacy_en, n_examples=1
     )

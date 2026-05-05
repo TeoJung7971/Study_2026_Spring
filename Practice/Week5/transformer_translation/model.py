@@ -8,8 +8,15 @@ from torch.nn.functional import log_softmax
 
 class EncoderDecoder(nn.Module):
     """
-    A standard Encoder-Decoder architecture. Base for this and many
-    other models.
+    추가: Annotated Transformer
+
+    Encoder와 decoder를 연결하여 sequence-to-sequence forward path를 구성한다.
+
+    - encoder: source sequence를 memory로 encoding하는 module
+    - decoder: target prefix와 memory로 다음 token 표현을 만드는 module
+    - src_embed: source embedding module
+    - tgt_embed: target embedding module
+    - generator: decoder output을 vocabulary log-probability로 변환하는 module
     """
 
     def __init__(self, encoder, decoder, src_embed, tgt_embed, generator):
@@ -32,7 +39,14 @@ class EncoderDecoder(nn.Module):
 
 
 class Generator(nn.Module):
-    "Define standard linear + softmax generation step."
+    """
+    추가: Annotated Transformer
+
+    Decoder hidden state를 target vocabulary log-probability로 변환한다.
+
+    - d_model: hidden dimension
+    - vocab: target vocabulary size
+    """
 
     def __init__(self, d_model, vocab):
         super(Generator, self).__init__()
@@ -48,7 +62,14 @@ def clones(module, N):
 
 
 class Encoder(nn.Module):
-    "Core encoder is a stack of N layers"
+    """
+    추가: Annotated Transformer
+
+    EncoderLayer를 N개 쌓아 source sequence representation을 생성한다.
+
+    - layer: encoder layer module
+    - N: number of encoder layers
+    """
 
     def __init__(self, layer, N):
         super(Encoder, self).__init__()
@@ -63,7 +84,14 @@ class Encoder(nn.Module):
 
 
 class LayerNorm(nn.Module):
-    "Construct a layernorm module (See citation for details)."
+    """
+    추가: Annotated Transformer
+
+    Feature dimension 기준으로 normalization을 수행한다.
+
+    - features: normalized feature dimension
+    - eps: numerical stability term
+    """
 
     def __init__(self, features, eps=1e-6):
         super(LayerNorm, self).__init__()
@@ -79,8 +107,12 @@ class LayerNorm(nn.Module):
 
 class SublayerConnection(nn.Module):
     """
-    A residual connection followed by a layer norm.
-    Note for code simplicity the norm is first as opposed to last.
+    추가: Annotated Transformer
+
+    LayerNorm, sublayer, dropout, residual connection을 묶어 적용한다.
+
+    - size: hidden dimension
+    - dropout: dropout ratio
     """
 
     def __init__(self, size, dropout):
@@ -94,7 +126,16 @@ class SublayerConnection(nn.Module):
 
 
 class EncoderLayer(nn.Module):
-    "Encoder is made up of self-attn and feed forward (defined below)"
+    """
+    추가: Annotated Transformer
+
+    Source self-attention과 feed-forward network로 encoder block을 구성한다.
+
+    - size: hidden dimension
+    - self_attn: source self-attention module
+    - feed_forward: position-wise feed-forward module
+    - dropout: dropout ratio
+    """
 
     def __init__(self, size, self_attn, feed_forward, dropout):
         super(EncoderLayer, self).__init__()
@@ -110,7 +151,14 @@ class EncoderLayer(nn.Module):
 
 
 class Decoder(nn.Module):
-    "Generic N layer decoder with masking."
+    """
+    추가: Annotated Transformer
+
+    DecoderLayer를 N개 쌓아 target prefix representation을 생성한다.
+
+    - layer: decoder layer module
+    - N: number of decoder layers
+    """
 
     def __init__(self, layer, N):
         super(Decoder, self).__init__()
@@ -124,7 +172,17 @@ class Decoder(nn.Module):
 
 
 class DecoderLayer(nn.Module):
-    "Decoder is made of self-attn, src-attn, and feed forward (defined below)"
+    """
+    추가: Annotated Transformer
+
+    Masked self-attention, encoder-decoder attention, FFN으로 decoder block을 구성한다.
+
+    - size: hidden dimension
+    - self_attn: target masked self-attention module
+    - src_attn: encoder-decoder attention module
+    - feed_forward: position-wise feed-forward module
+    - dropout: dropout ratio
+    """
 
     def __init__(self, size, self_attn, src_attn, feed_forward, dropout):
         super(DecoderLayer, self).__init__()
@@ -152,7 +210,17 @@ def subsequent_mask(size):
 
 
 def attention(query, key, value, mask=None, dropout=None):
-    "Compute 'Scaled Dot Product Attention'"
+    """
+    추가: Annotated Transformer
+
+    Scaled dot-product attention을 계산한다.
+
+    - query: query tensor
+    - key: key tensor
+    - value: value tensor
+    - mask: attention mask
+    - dropout: attention weight dropout
+    """
     d_k = query.size(-1)
     scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)
     if mask is not None:
@@ -164,6 +232,16 @@ def attention(query, key, value, mask=None, dropout=None):
 
 
 class MultiHeadedAttention(nn.Module):
+    """
+    추가: Annotated Transformer
+
+    여러 attention head를 병렬로 계산한 뒤 하나의 hidden representation으로 결합한다.
+
+    - h: number of attention heads
+    - d_model: hidden dimension
+    - dropout: attention dropout ratio
+    """
+
     def __init__(self, h, d_model, dropout=0.1):
         "Take in model size and number of heads."
         super(MultiHeadedAttention, self).__init__()
@@ -201,7 +279,15 @@ class MultiHeadedAttention(nn.Module):
 
 
 class PositionwiseFeedForward(nn.Module):
-    "Implements FFN equation."
+    """
+    추가: Annotated Transformer
+
+    각 position에 독립적으로 적용되는 two-layer feed-forward network
+
+    - d_model: hidden dimension
+    - d_ff: intermediate feed-forward dimension
+    - dropout: dropout ratio
+    """
 
     def __init__(self, d_model, d_ff, dropout=0.1):
         super(PositionwiseFeedForward, self).__init__()
@@ -214,6 +300,15 @@ class PositionwiseFeedForward(nn.Module):
 
 
 class Embeddings(nn.Module):
+    """
+    추가: Annotated Transformer
+
+    Token id를 embedding vector로 변환하고 hidden dimension scale을 적용한다.
+
+    - d_model: embedding dimension
+    - vocab: vocabulary size
+    """
+
     def __init__(self, d_model, vocab):
         super(Embeddings, self).__init__()
         self.lut = nn.Embedding(vocab, d_model)
@@ -224,7 +319,15 @@ class Embeddings(nn.Module):
 
 
 class PositionalEncoding(nn.Module):
-    "Implement the PE function."
+    """
+    추가: Annotated Transformer
+
+    Sinusoidal positional encoding을 token embedding에 더한다.
+
+    - d_model: hidden dimension
+    - dropout: dropout ratio
+    - max_len: maximum supported sequence length
+    """
 
     def __init__(self, d_model, dropout, max_len=5000):
         super(PositionalEncoding, self).__init__()
@@ -248,7 +351,19 @@ class PositionalEncoding(nn.Module):
 def make_model(
     src_vocab, tgt_vocab, N=6, d_model=512, d_ff=2048, h=8, dropout=0.1
 ):
-    "Helper: Construct a model from hyperparameters."
+    """
+    추가: Annotated Transformer
+
+    Hyperparameter를 바탕으로 EncoderDecoder Transformer 전체 모델을 생성한다.
+
+    - src_vocab: source vocabulary size
+    - tgt_vocab: target vocabulary size
+    - N: number of encoder/decoder layers
+    - d_model: hidden dimension
+    - d_ff: feed-forward dimension
+    - h: number of attention heads
+    - dropout: dropout ratio
+    """
     c = copy.deepcopy
     attn = MultiHeadedAttention(h, d_model)
     ff = PositionwiseFeedForward(d_model, d_ff, dropout)
